@@ -1,8 +1,3 @@
-# Configure the AWS Provider
-provider "aws" {
-  region = "ap-southeast-5"
-}
-
 #Retrieve the list of AZs in the current AWS region
 data "aws_availability_zones" "available" {}
 data "aws_region" "current" {}
