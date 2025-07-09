@@ -1,3 +1,4 @@
+// Lab 4.9 - Terraform Configuration Block -------------------------------------------------------------------------------
 terraform {
   required_version = ">= 1.0.0"
   required_providers {
