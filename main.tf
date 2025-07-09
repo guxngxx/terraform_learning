@@ -60,14 +60,33 @@ provider "aws" {
 # }
 
 // Lab 4.6 - Introduction to the Terraform Variables Block --------------------------------------------------------------
-resource "aws_subnet" "variables-subnet" {
-  vpc_id                  = "vpc-0215ae45ecf657527"
-  cidr_block              = var.variables_sub_cidr
-  availability_zone       = var.variables_sub_az
-  map_public_ip_on_launch = var.variables_sub_auto_ip
+# resource "aws_subnet" "variables-subnet" {
+#   vpc_id                  = "vpc-0215ae45ecf657527"
+#   cidr_block              = var.variables_sub_cidr
+#   availability_zone       = var.variables_sub_az
+#   map_public_ip_on_launch = var.variables_sub_auto_ip
 
+#   tags = {
+#     Name      = "sub-variables-${var.variables_sub_az}"
+#     Terraform = "true"
+#   }
+# }
+
+// Lab 4.7 - Introduction to the Terraform Locals Block -----------------------------------------------------------------
+// usually local block placed at top
+locals {
+  team        = "api_mgmt_dev"
+  application = "corp_api"
+  server_name = "ec2-${var.environment}-api-${var.variables_sub_az}"
+}
+
+resource "aws_instance" "web_server" {
+  ami           = "ami-02454c79b877e3c97"
+  instance_type = "t3.micro"
+  subnet_id     = "subnet-06dd3c17713ca845d"
   tags = {
-    Name      = "sub-variables-${var.variables_sub_az}"
-    Terraform = "true"
+    Name = local.server_name
+    Owner = local.team
+    App = local.application
   }
 }

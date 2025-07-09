@@ -16,3 +16,10 @@ variable "variables_sub_auto_ip" {
   type        = bool
   default     = true
 }
+
+// Lab 4.7 - Introduction to the Terraform Locals Block -----------------------------------------------------------------
+variable "environment" {
+  description = "Environment for deployment"
+  type        = string
+  default     = "dev"
+}
