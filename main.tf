@@ -45,8 +45,8 @@ resource "aws_route_table" "public_route_table" {
   vpc_id = aws_vpc.vpc.id
 
   route {
-    cidr_block     = "0.0.0.0/0"
-    gateway_id     = aws_internet_gateway.internet_gateway.id
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.internet_gateway.id
     #nat_gateway_id = aws_nat_gateway.nat_gateway.id
   }
   tags = {
@@ -59,9 +59,9 @@ resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.vpc.id
 
   route {
-    cidr_block     = "0.0.0.0/0"
+    cidr_block = "0.0.0.0/0"
     # gateway_id     = aws_internet_gateway.internet_gateway.id
-    # nat_gateway_id = aws_nat_gateway.nat_gateway.id
+    nat_gateway_id = aws_nat_gateway.nat_gateway.id
   }
   tags = {
     Name      = "demo_private_rtb"
@@ -92,21 +92,48 @@ resource "aws_internet_gateway" "internet_gateway" {
   }
 }
 
-# #Create EIP for NAT Gateway
-# resource "aws_eip" "nat_gateway_eip" {
-#   domain     = "vpc"
-#   depends_on = [aws_internet_gateway.internet_gateway]
-#   tags = {
-#     Name = "demo_igw_eip"
-#   }
-# }
+#Create EIP for NAT Gateway
+resource "aws_eip" "nat_gateway_eip" {
+  domain     = "vpc"
+  depends_on = [aws_internet_gateway.internet_gateway]
+  tags = {
+    Name = "demo_igw_eip"
+  }
+}
 
-# #Create NAT Gateway
-# resource "aws_nat_gateway" "nat_gateway" {
-#   depends_on    = [aws_subnet.public_subnets]
-#   allocation_id = aws_eip.nat_gateway_eip.id
-#   subnet_id     = aws_subnet.public_subnets["public_subnet_1"].id
-#   tags = {
-#     Name = "demo_nat_gateway"
-#   }
-# }
+#Create NAT Gateway
+resource "aws_nat_gateway" "nat_gateway" {
+  depends_on    = [aws_subnet.public_subnets]
+  allocation_id = aws_eip.nat_gateway_eip.id
+  subnet_id     = aws_subnet.public_subnets["public_subnet_1"].id
+  tags = {
+    Name = "demo_nat_gateway"
+  }
+}
+
+# Terraform Data Block - To Lookup Latest Ubuntu 20.04 AMI Image
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"]
+}
+
+# Terraform Resource Block - To Build EC2 instance in Public Subnet
+resource "aws_instance" "web_server" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.micro"
+  subnet_id     = aws_subnet.public_subnets["public_subnet_1"].id
+  tags = {
+    Name = "Ubuntu EC2 Server"
+  }
+}
