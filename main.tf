@@ -74,19 +74,71 @@ provider "aws" {
 
 // Lab 4.7 - Introduction to the Terraform Locals Block -----------------------------------------------------------------
 // usually local block placed at top
-locals {
-  team        = "api_mgmt_dev"
-  application = "corp_api"
-  server_name = "ec2-${var.environment}-api-${var.variables_sub_az}"
+# locals {
+#   team        = "api_mgmt_dev"
+#   application = "corp_api"
+#   server_name = "ec2-${var.environment}-api-${var.variables_sub_az}"
+# }
+
+# resource "aws_instance" "web_server" {
+#   ami           = "ami-02454c79b877e3c97"
+#   instance_type = "t3.micro"
+#   subnet_id     = "subnet-06dd3c17713ca845d"
+#   tags = {
+#     Name = local.server_name
+#     Owner = local.team
+#     App = local.application
+#   }
+# }
+
+// Lab 4.8 - Introduction to the Terraform Data Block -------------------------------------------------------------------
+// Retrieve the AWS region
+data "aws_region" "current" {}
+
+resource "aws_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name        = "data_block_test_vpc"
+    Environment = "demo_environment"
+    Terraform   = "true"
+    Region      = data.aws_region.current.name
+  }
+}
+
+// Retrieve the list of AZs in the current AWS region
+data "aws_availability_zones" "available" {}
+
+# resource "aws_subnet" "private_subnets" {
+#   for_each          = var.private_subnets
+#   vpc_id            = aws_vpc.vpc.id
+#   cidr_block        = cidrsubnet(var.vpc_cidr, 8, each.value)
+#   availability_zone = tolist(data.aws_availability_zones.available.names)[each.value]
+
+#   tags = {
+#     Name      = each.key
+#     Terraform = "true"
+#   }
+# }
+
+// Terraform Data Block - Lookup Ubuntu 22.04
+data "aws_ami" "ubuntu_22_04" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  owners = ["099720109477"]
 }
 
 resource "aws_instance" "web_server" {
-  ami           = "ami-02454c79b877e3c97"
-  instance_type = "t3.micro"
-  subnet_id     = "subnet-06dd3c17713ca845d"
+  ami                         = data.aws_ami.ubuntu_22_04.id
+  instance_type               = "t3.micro"
+  subnet_id                   = "subnet-06dd3c17713ca845d"
+  associate_public_ip_address = true
   tags = {
-    Name = local.server_name
-    Owner = local.team
-    App = local.application
+    Name = "Web EC2 Server"
   }
 }
