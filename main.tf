@@ -93,18 +93,18 @@ provider "aws" {
 
 // Lab 4.8 - Introduction to the Terraform Data Block -------------------------------------------------------------------
 # // Retrieve the AWS region
-data "aws_region" "current" {}
+# data "aws_region" "current" {}
 
-resource "aws_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
+# resource "aws_vpc" "vpc" {
+#   cidr_block = "10.0.0.0/16"
 
-  tags = {
-    Name        = "data_block_test_vpc"
-    Environment = "demo_environment"
-    Terraform   = "true"
-    Region      = data.aws_region.current.name
-  }
-}
+#   tags = {
+#     Name        = "data_block_test_vpc"
+#     Environment = "demo_environment"
+#     Terraform   = "true"
+#     Region      = data.aws_region.current.name
+#   }
+# }
 
 # // Retrieve the list of AZs in the current AWS region
 # data "aws_availability_zones" "available" {}
