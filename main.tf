@@ -302,3 +302,38 @@ provider "aws" {
 #   ami           = "ami-02b9fe2e542eec967"
 #   instance_type = "t3.micro"
 # }
+
+// Lab 6.1 - Terraform Modules -----------------------------------------------------------------------------------
+module "server" {
+  source    = "./server"
+  ami       = "ami-02b9fe2e542eec967"
+  subnet_id = "subnet-06dd3c17713ca845d"
+  security_groups = [
+    "sg-02f2d9d1daf900579"
+  ]
+}
+
+output "public_ip" {
+  value = module.server.public_ip
+}
+
+output "public_dns" {
+  value = module.server.public_dns
+}
+
+module "another_server" {
+  source    = "./server"
+  ami       = "ami-02b9fe2e542eec967"
+  subnet_id = "subnet-06dd3c17713ca845d"
+  security_groups = [
+    "sg-02f2d9d1daf900579"
+  ]
+}
+
+output "another_public_ip" {
+  value = module.another_server.public_ip
+}
+
+output "another_public_dns" {
+  value = module.another_server.public_dns
+}
