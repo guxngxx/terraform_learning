@@ -1,6 +1,11 @@
 # Configure the AWS Provider
 provider "aws" {
   region = "ap-southeast-5"
+  default_tags {
+    tags = {
+      Environment = terraform.workspace
+    }
+  }
 }
 
 # resource "random_string" "random" {
@@ -293,7 +298,7 @@ provider "aws" {
 # }
 
 // Lab 5.3 - Terraform Import ------------------------------------------------------------------------------------
-resource "aws_instance" "aws_ubuntu" {
-  ami           = "ami-02b9fe2e542eec967"
-  instance_type = "t3.micro"
-}
+# resource "aws_instance" "aws_ubuntu" {
+#   ami           = "ami-02b9fe2e542eec967"
+#   instance_type = "t3.micro"
+# }

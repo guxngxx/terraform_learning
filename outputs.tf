@@ -1,7 +1,7 @@
 // Lab 4.11 - Introduction to the Terraform Output Block -----------------------------------------------------------------
 output "hello-world" {
   description = "Print a Hello World text output"
-  value       = "Hello World"
+  value       = "Hello World. Environment: ${terraform.workspace}"
 }
 
 # output "vpc_id" {
