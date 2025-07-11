@@ -371,11 +371,11 @@ provider "aws" {
 # }
 
 // Lab 6.5 - Terraform Modules - Public Module Registry -----------------------------------------------------------------
-module "s3-bucket" {
-  source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "5.2.0"
-}
+# module "s3-bucket" {
+#   source  = "terraform-aws-modules/s3-bucket/aws"
+#   version = "5.2.0"
+# }
 
-output "s3_bucket_name" {
-  value = module.s3-bucket.s3_bucket_bucket_domain_name
-}
+# output "s3_bucket_name" {
+#   value = module.s3-bucket.s3_bucket_bucket_domain_name
+# }

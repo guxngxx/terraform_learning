@@ -26,4 +26,9 @@ terraform {
       version = "4.1.0"
     }
   }
+
+  // Lab 7.2 -  Initializing Terraform with terraform init --------------------------------------------------------
+  # backend "local" {
+  #   path = "mystate/terraform.tfstate"
+  # }
 }
