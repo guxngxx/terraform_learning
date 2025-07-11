@@ -321,6 +321,10 @@ output "public_dns" {
   value = module.server.public_dns
 }
 
+output "size" {
+  value = module.server.size
+}
+
 // Lab 6.2 - Terraform Module Sources -----------------------------------------------------------------------------------
 module "another_server" {
   source      = "./modules/web_server"
@@ -344,25 +348,24 @@ output "another_public_dns" {
   value = module.another_server.public_dns
 }
 
-module "autoscaling" {
-  source  = "terraform-aws-modules/autoscaling/aws"
-  version = "9.0.1"
- 
-  # Autoscaling group
-  name = "myasg"
- 
-  vpc_zone_identifier = ["subnet-06dd3c17713ca845d"]
-  min_size            = 0
-  max_size            = 1
-  desired_capacity    = 1
- 
-  # Launch template
-  image_id      = "ami-02b9fe2e542eec967"
-  instance_type = "t3.micro"
-  instance_name = "asg-instance"
- 
-  tags = {
-    Name = "Web EC2 Server 2"
-  }
- 
-}
+# module "autoscaling" {
+#   source  = "terraform-aws-modules/autoscaling/aws"
+#   version = "9.0.1"
+
+#   # Autoscaling group
+#   name = "myasg"
+
+#   vpc_zone_identifier = ["subnet-06dd3c17713ca845d"]
+#   min_size            = 0
+#   max_size            = 1
+#   desired_capacity    = 1
+
+#   # Launch template
+#   image_id      = "ami-02b9fe2e542eec967"
+#   instance_type = "t3.micro"
+#   instance_name = "asg-instance"
+
+#   tags = {
+#     Name = "Web EC2 Server 2"
+#   }
+# }
