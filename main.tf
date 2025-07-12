@@ -574,7 +574,6 @@ resource "aws_security_group" "main3" {
 // Lab 9.11 - Terraform Resource Lifecycles ------------------------------------------------------------------------------
 resource "aws_security_group" "main4" {
   name = "core-sg-global"
-
   vpc_id = "testing123"
 
   dynamic "ingress" {
