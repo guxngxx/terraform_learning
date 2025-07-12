@@ -570,3 +570,26 @@ resource "aws_security_group" "main3" {
     }
   }
 }
+
+// Lab 9.11 - Terraform Resource Lifecycles ------------------------------------------------------------------------------
+resource "aws_security_group" "main4" {
+  name = "core-sg-global"
+
+  vpc_id = "testing123"
+
+  dynamic "ingress" {
+    for_each = var.web_ingress
+    content {
+      description = ingress.value.description
+      from_port   = ingress.value.port
+      to_port     = ingress.value.port
+      protocol    = ingress.value.protocol
+      cidr_blocks = ingress.value.cidr_blocks
+    }
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy       = true
+  }
+}
