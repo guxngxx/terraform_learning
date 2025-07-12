@@ -379,3 +379,28 @@ provider "aws" {
 # output "s3_bucket_name" {
 #   value = module.s3-bucket.s3_bucket_bucket_domain_name
 # }
+
+// Lab 9.6 - Terraform Collections and Structure Types ------------------------------------------------------------------
+// create 1 subnet only
+resource "aws_subnet" "list_subnet1" {
+  vpc_id     = "testing123"
+  cidr_block = var.ip["prod"]
+  // cidr_block     = var.ip[var.environment]
+  availability_zone = var.us-east-1-azs[0]
+}
+
+// create 2 subnets because "for_each" loop 2 items in var.ip
+resource "aws_subnet" "list_subnet2" {
+  for_each          = var.ip
+  vpc_id            = "testing123"
+  cidr_block        = each.value
+  availability_zone = var.us-east-1-azs[0]
+}
+
+// create 2 subnets because "for_each" loop 2 items in var.env
+resource "aws_subnet" "list_subnet3" {
+  for_each          = var.env
+  vpc_id            = "testing123"
+  cidr_block        = each.value.ip
+  availability_zone = each.value.az
+}
